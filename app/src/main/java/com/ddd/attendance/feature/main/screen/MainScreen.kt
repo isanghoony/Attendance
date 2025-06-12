@@ -1,15 +1,9 @@
 package com.ddd.attendance.feature.main.screen
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,9 +15,12 @@ import com.ddd.attendance.feature.member.screen.MemberScreen
 import com.ddd.attendance.feature.mypage.screen.MyPageScreen
 import com.ddd.attendance.feature.qr.screen.QrImageScreen
 import com.ddd.attendance.feature.qr.screen.QrScanScreen
+import com.ddd.attendance.feature.splash.screen.SplashScreen
 
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    goLogin:() -> Unit = {}
+) {
     val navController = rememberNavController()
     val viewModel: MainViewModel = hiltViewModel()
 
@@ -35,6 +32,12 @@ fun MainScreen() {
                 navController = navController,
                 startDestination = startDestination
             ) {
+                composable(route = ScreenName.SPLASH.name) {
+                    SplashScreen(
+                        navController = navController,
+                        goLogin = goLogin
+                    )
+                }
                 composable(route = ScreenName.MEMBER.name) {
                     MemberScreen(
                         navController = navController
@@ -75,5 +78,5 @@ fun MainScreen() {
 }
 
 enum class ScreenName {
-    MEMBER, ADMIN, NONE, QR_IMAGE, QR_SCAN, MY_PAGE, ADD_SCHEDULE
+    MEMBER, ADMIN, LOGIN, QR_IMAGE, QR_SCAN, MY_PAGE, ADD_SCHEDULE, SPLASH
 }

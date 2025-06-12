@@ -98,6 +98,7 @@ dependencies {
     implementation(dependencyNotation = libs.play.services.auth)
 
     implementation(dependencyNotation = libs.glide.core)
+    implementation(dependencyNotation = libs.lottie.compose)
 
     debugImplementation(dependencyNotation = libs.chucker.debug)
     releaseImplementation(dependencyNotation = libs.chucker.release)

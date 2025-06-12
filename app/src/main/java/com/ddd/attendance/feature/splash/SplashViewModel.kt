@@ -1,4 +1,4 @@
-package com.ddd.attendance.feature.main
+package com.ddd.attendance.feature.splash
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
+class SplashViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val inviteTypeUseCase: GetInviteTypeUseCase
 ) : ViewModel() {
@@ -25,7 +25,7 @@ class MainViewModel @Inject constructor(
                 val loginType = when (it) {
                     "member" -> ScreenName.MEMBER.name
                     "moderator" -> ScreenName.ADMIN.name
-                    else -> ScreenName.SPLASH.name
+                    else -> ScreenName.LOGIN.name
                 }
                 _startDestination.value = loginType
             }
