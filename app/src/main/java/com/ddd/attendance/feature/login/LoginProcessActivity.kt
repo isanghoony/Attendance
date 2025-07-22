@@ -101,6 +101,8 @@ class LoginProcessActivity : ComponentActivity() {
     }
 
     private fun handleGoogleIdToken(idToken: String) {
+        Log.d(TAG, "Google 로그인 요청")
+
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
@@ -112,12 +114,13 @@ class LoginProcessActivity : ComponentActivity() {
                         name = user?.displayName.orEmpty(),
                         uid = user?.uid.orEmpty()
                     )
-                    Log.i(TAG, "구글 로그인 성공!")
                     // 여기서 콜백 호출해서 화면에 결과 전달
                     onGoogleLoginResult?.invoke(loginResult)
+                    Log.d(TAG, "Google 로그인 성공")
                 } else {
-                    Log.e(TAG, "구글 로그인 실패 !")
+                    Log.e(TAG, "Google 로그인 실패")
                 }
+                Log.d(TAG, "Google 로그인 완료")
             }
     }
 }

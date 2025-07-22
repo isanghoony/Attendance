@@ -2,7 +2,6 @@ package com.ddd.attendance.feature.login.screen.login
 
 import android.app.Activity
 import android.content.Intent
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -34,13 +33,9 @@ import com.ddd.attendance.core.designsystem.DDDText
 import com.ddd.attendance.core.model.google.GoogleLogin
 import com.ddd.attendance.core.ui.theme.DDD_300
 import com.ddd.attendance.core.ui.theme.DDD_BLACK
-import com.ddd.attendance.feature.login.LoginProcessActivity
 import com.ddd.attendance.feature.login.LoginProcessViewModel
 import com.ddd.attendance.feature.login.ScreenName
 import com.ddd.attendance.feature.login.UiState
-import com.ddd.attendance.feature.login.model.CheckEmailUiState
-import com.ddd.attendance.feature.login.model.LoginEmailUiState
-import com.ddd.attendance.feature.login.model.ProfileMeUiState
 import com.ddd.attendance.feature.main.MainActivity
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

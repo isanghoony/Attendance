@@ -9,6 +9,7 @@ import com.ddd.attendance.core.data.api.AccountsApi
 import com.ddd.attendance.core.data.api.AttendanceApi
 import com.ddd.attendance.core.data.api.InvitesApi
 import com.ddd.attendance.core.data.api.ProfilesApi
+import com.ddd.attendance.core.data.api.QrCodeApi
 import com.ddd.attendance.core.datastore.datasource.AccountPreferencesDataSource
 import com.google.gson.Gson
 import dagger.Module
@@ -132,4 +133,9 @@ object ApiModule {
         return retrofit.create()
     }
 
+    @Provides
+    @Singleton
+    fun provideQrCodeApi(retrofit: Retrofit): QrCodeApi {
+        return retrofit.create()
+    }
 }
