@@ -17,17 +17,15 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.ddd.attendance.R
 import com.ddd.attendance.core.designsystem.AttendanceStatusRow
@@ -51,10 +49,8 @@ fun MemberScreen(
     navController: NavController,
     viewModel: MemberViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
-    val attendanceCountUiState by viewModel.attendanceCountUiState.collectAsState()
-    val attendanceListUiState by viewModel.attendanceListUiState.collectAsState()
+    val attendanceCountUiState by viewModel.attendanceCountUiState.collectAsStateWithLifecycle()
+    val attendanceListUiState by viewModel.attendanceListUiState.collectAsStateWithLifecycle()
 
     Box(
         modifier = Modifier.fillMaxSize()

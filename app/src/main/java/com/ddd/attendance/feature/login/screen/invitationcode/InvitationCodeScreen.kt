@@ -18,7 +18,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,21 +44,18 @@ import com.ddd.attendance.core.ui.theme.DDD_NEUTRAL_RED
 import com.ddd.attendance.core.ui.theme.DDD_WHITE
 import com.ddd.attendance.feature.login.LoginProcessViewModel
 import com.ddd.attendance.feature.login.ScreenName
-import com.ddd.attendance.feature.login.model.ValidateUiState
+import com.ddd.attendance.feature.login.UiEvent
 
 @Composable
 fun InvitationCodeScreen(
     navController: NavController,
     viewModel: LoginProcessViewModel
 ) {
-    val validateUiState by viewModel.validateUiState.collectAsState()
-
-    LaunchedEffect(validateUiState) {
-        if (validateUiState is ValidateUiState.Success) {
-            val result = (validateUiState as ValidateUiState.Success).data
-            if (result.valid && result.inviteCodeId.isNotBlank()) {
-                navController.navigate(route = ScreenName.NAME.name) // 이름 입력 화면으로 전환
-                viewModel.resetValidateState() //상태 초기화
+    LaunchedEffect(Unit) {
+        viewModel.eventFlow.collect { event ->
+            when (event) {
+                is UiEvent.NameEvent -> navController.navigate(route = ScreenName.NAME.name)
+                else -> {}
             }
         }
     }

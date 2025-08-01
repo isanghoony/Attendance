@@ -24,14 +24,15 @@ fun SplashScreen(
     goNext: (screenName: String) -> Unit
 ) {
     val viewModel: SplashViewModel = hiltViewModel()
-    val nextScreen by viewModel.screenType.collectAsStateWithLifecycle()
+
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.splash))
     val animState by animateLottieCompositionAsState(composition = composition, iterations = 1)
 
     LaunchedEffect(animState) {
         if (animState == 1f ) {
-            goNext(nextScreen)
+            goNext(uiState.screenName)
         }
     }
 

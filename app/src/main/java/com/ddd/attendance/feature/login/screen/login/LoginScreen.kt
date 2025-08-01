@@ -13,8 +13,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -26,7 +24,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityOptionsCompat
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.ddd.attendance.R
 import com.ddd.attendance.core.designsystem.DDDText
@@ -35,9 +32,8 @@ import com.ddd.attendance.core.ui.theme.DDD_300
 import com.ddd.attendance.core.ui.theme.DDD_BLACK
 import com.ddd.attendance.feature.login.LoginProcessViewModel
 import com.ddd.attendance.feature.login.ScreenName
-import com.ddd.attendance.feature.login.UiState
+import com.ddd.attendance.feature.login.UiEvent
 import com.ddd.attendance.feature.main.MainActivity
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @Composable
@@ -52,11 +48,6 @@ fun LoginScreen(
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    val checkEmailUiState by viewModel.checkEmailUiState.collectAsState()
-    val loginEmailUiState by viewModel.loginEmailUiState.collectAsState()
-
     LaunchedEffect(snackBarMessage) {
         snackBarMessage?.let {
             if (it.isNotBlank()) {
@@ -69,14 +60,17 @@ fun LoginScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.navigateToInvitation.collectLatest {
-            navController.navigate(route = ScreenName.INVITATION_CODE.name)
-        }
-        viewModel.openMainActivity.collectLatest {
-            context?.let {
-                val options = ActivityOptionsCompat.makeCustomAnimation(it, android.R.anim.fade_in, android.R.anim.fade_out)
-                it.startActivity(Intent(context, MainActivity::class.java), options.toBundle())
-                it.finish()
+        viewModel.eventFlow.collect { event ->
+            when (event) {
+                is UiEvent.GoMianEvent -> {
+                    context?.let {
+                        val options = ActivityOptionsCompat.makeCustomAnimation(it, android.R.anim.fade_in, android.R.anim.fade_out)
+                        it.startActivity(Intent(context, MainActivity::class.java), options.toBundle())
+                        it.finish()
+                    }
+                }
+                is UiEvent.SignUpEvent -> navController.navigate(route = ScreenName.INVITATION_CODE.name)
+                else -> {}
             }
         }
     }
@@ -85,7 +79,8 @@ fun LoginScreen(
         snackBarHostState = snackBarHostState,
         onClickGoogle = { //  로그인 성공 결과
             onClickGoogle { result -> // google oauth result
-                viewModel.setUiState(UiState.Success(result))
+                viewModel.setUpdateUser(result)
+                viewModel.checkEmail() //구글 로그인 완료, 로그인 프로세스 진행
             }
         }
     )

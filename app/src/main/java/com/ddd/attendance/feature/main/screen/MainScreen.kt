@@ -2,9 +2,9 @@ package com.ddd.attendance.feature.main.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -21,8 +21,8 @@ fun MainScreen() {
     val navController = rememberNavController()
     val viewModel: MainViewModel = hiltViewModel()
 
-    val startDestination by viewModel.startDestination.collectAsState()
-    val userName by viewModel.userName.collectAsState()
+    val startDestination by viewModel.startDestination.collectAsStateWithLifecycle()
+    val userName by viewModel.userName.collectAsStateWithLifecycle()
 
     if (startDestination.isNotBlank()) {
         Column {
@@ -65,6 +65,8 @@ fun MainScreen() {
                         navController = navController
                     )
                 }
+
+                composable(route = ScreenName.NONE.name) {}
             }
         }
     }
