@@ -86,6 +86,7 @@ class SplashViewModel @Inject constructor(
                         ?.let {
                             // 로그인 성공 시 프로필 조회
                             getProfileMeUseCase()
+                                .catch { _errorFlow.emit(it) }
                                 .firstOrNull()
                                 ?.let { profile ->
                                     _uiState.update { s ->

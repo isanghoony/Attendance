@@ -3,9 +3,14 @@ package com.ddd.attendance.feature.splash.screen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -24,11 +29,17 @@ fun SplashScreen(
     goNext: (screenName: String) -> Unit
 ) {
     val viewModel: SplashViewModel = hiltViewModel()
-
+    val snackBarHostState = remember { SnackbarHostState() }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.splash))
     val animState by animateLottieCompositionAsState(composition = composition, iterations = 1)
+
+    LaunchedEffect(Unit) {
+        viewModel.errorFlow.collect { throwable ->
+            snackBarHostState.showSnackbar("${throwable.message}")
+        }
+    }
 
     LaunchedEffect(animState) {
         if (animState == 1f ) {
@@ -36,19 +47,33 @@ fun SplashScreen(
         }
     }
 
-    Content(composition)
+    Content(
+        composition = composition,
+        snackBarHostState = snackBarHostState
+    )
 }
 
 @Composable
-private fun Content(composition: LottieComposition?) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = DDD_WHITE), // 배경색은 필요 시 변경
-        contentAlignment = Alignment.Center
-    ) {
-        if (composition != null) {
-            LottieAnimation(composition = composition)
+private fun Content(
+    composition: LottieComposition?,
+    snackBarHostState: SnackbarHostState
+) {
+    Scaffold(
+        modifier = Modifier,
+        snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
+        content = { paddingValues ->
+            Box(
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .fillMaxSize()
+                    .background(color = DDD_WHITE),
+                contentAlignment = Alignment.Center
+            ) {
+                if (composition != null) {
+                    LottieAnimation(composition = composition)
+                }
+            }
         }
-    }
+    )
+
 }
