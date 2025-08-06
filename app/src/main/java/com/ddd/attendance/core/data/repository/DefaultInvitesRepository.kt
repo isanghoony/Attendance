@@ -1,9 +1,9 @@
 package com.ddd.attendance.core.data.repository
 
 import com.ddd.attendance.core.data.api.InvitesApi
-import com.ddd.attendance.core.data.api.request.invites.ValidateRequest
+import com.ddd.attendance.core.data.api.request.invites.InviteValidateRequest
 import com.ddd.attendance.core.datastore.datasource.AccountPreferencesDataSource
-import com.ddd.attendance.core.model.invites.Validate
+import com.ddd.attendance.core.model.invites.InviteValidate
 import com.ddd.attendance.core.network.InvitesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -16,9 +16,9 @@ class DefaultInvitesRepository @Inject constructor(
     private val inviteType: Flow<String> = dataSource.accountInviteType
     private val inviteCodeId: Flow<String> = dataSource.accountInviteCodeId
 
-    override fun validate(inviteCode: String): Flow<Validate> = flow {
+    override fun validate(inviteCode: String): Flow<InviteValidate> = flow {
         val response = api.validate(
-            request = ValidateRequest(
+            request = InviteValidateRequest(
                 inviteCode = inviteCode
             )
         )
@@ -27,7 +27,7 @@ class DefaultInvitesRepository @Inject constructor(
             dataSource.updateAccountInviteCodeId(it.inviteCodeId)
         }
 
-        emit(Validate.from(response.data))
+        emit(InviteValidate.from(response.data))
     }
 
     override fun getInviteType(): Flow<String> = inviteType
